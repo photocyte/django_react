@@ -6,17 +6,24 @@
   <title>Django REST with React</title>
 </head>
 <body>
-  Ginkgo Coding Challenge<br>
+  Ginkgo Backend Coding Challenge<br>
   Single Page App (SPA)
-<div id="post_form">
-Hello friend
+
+<iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe> <!-- https://stackoverflow.com/questions/25983603/how-to-submit-an-html-form-without-redirection -->
+
+<div id="post_form">   <!-- See https://www.freecodecamp.org/news/html-form-input-type-and-submit-button-example/ -->
+  <textarea form ="dnaqueryform" name="dnaseq" id="dnaseqid" cols="100" rows="20" wrap="soft" placeholder="Enter DNA sequence here..."></textarea> <!-- https://stackoverflow.com/questions/13089182/more-than-1-row-in-input-type-textarea -->
+  <form id="dnaqueryform" action="api/lead/" method="POST" target="dummyframe">
+    <br>
+    <input type="submit" value="Submit!" />
+</form>
 </div>
-
-
-<div id="app"> <!-- Presumably react transforms 'app' to call frontend/App.js-->
+<hr>
+<b>Query results will be rendered below:</b>
+<div id="api_print_react_app"> 
     <!-- React will load here -->
 </div>
 </body>
 {% load static %}
-<script src="{% static "frontend/main.js" %}"></script>
+<script src="{% static "frontend/main.js" %}"></script>  <!-- This abomination created by webpack -->
 </html>

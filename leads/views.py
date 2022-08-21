@@ -6,6 +6,8 @@ from .models import Lead
 from .serializers import LeadSerializer
 from rest_framework import generics
 
+## https://www.django-rest-framework.org/api-guide/generic-views/#listcreateapiview
 class LeadListCreate(generics.ListCreateAPIView):
-    queryset = Lead.objects.all()
+    queryset = Lead.objects.all() 
     serializer_class = LeadSerializer
+

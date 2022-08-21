@@ -2,26 +2,18 @@
 
 ## Setup virtual environment.
 
-#mkdir -p django-react
-#mkdir -p django-react-tutorial
-
-#cd django-react
-
 #python3 -m venv venv
 source venv/bin/activate
 
-#pip install django djangorestframework biopython
+#pip install django djangorestframework biopython django-cors-headers
 
 #django-admin startproject django_react .
-django-admin startapp ginkgo_code_challenge_app
+#django-admin startapp leads
 
-## Pull the tblastn/blast+ and prepare blast+ dbs from prot files.
-
-
-## Run the backend server
-
-
-## Serve the client html
-
-
-## 
+cd frontend; npm run dev; cd ..
+rm -rf leads/migrations/
+rm -f db.sqlite3
+python manage.py makemigrations leads
+python manage.py migrate
+##python manage.py createsuperuser
+python manage.py runserver

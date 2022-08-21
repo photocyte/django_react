@@ -4,20 +4,24 @@ from django.shortcuts import render
 
 from .models import Lead
 from .models import DNA_Protein_Alignment_Query
-from .serializers import LeadSerializer
-from .serializers import DNAQuerySerializer
+from . import serializers
 from rest_framework import generics
 import threading
 import Bio
 
+from rest_framework import permissions, views, status
+from rest_framework.response import Response
+
+from django.contrib.auth import login
+
 ## https://www.django-rest-framework.org/api-guide/generic-views/#listcreateapiview
 class LeadListCreate(generics.ListCreateAPIView):
     queryset = Lead.objects.all() 
-    serializer_class = LeadSerializer
+    serializer_class = serializers.LeadSerializer
 
 class QueryListCreate(generics.ListCreateAPIView):
     queryset = DNA_Protein_Alignment_Query.objects.all() 
-    serializer_class = DNAQuerySerializer
+    serializer_class = serializers.DNAQuerySerializer
 
     def execute_dna_to_protein_alignment(self,dna_seq):
         ## See https://stackoverflow.com/questions/41094013/when-to-use-serializers-create-and-modelviewsets-perform-create
@@ -52,3 +56,16 @@ class QueryListCreate(generics.ListCreateAPIView):
         
 
         return return_val
+
+
+class LoginView(views.APIView):
+    # This view should be accessible also for unauthenticated users.
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = serializers.LoginSerializer(data=self.request.data,
+            context={ 'request': self.request })
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return Response(None, status=status.HTTP_202_ACCEPTED)

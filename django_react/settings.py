@@ -40,7 +40,35 @@ INSTALLED_APPS = [
     'leads.apps.LeadsConfig',
     'rest_framework', ## And here!
     'frontend', ## Comments can go here!
+    #'rest_framework.authtoken', ## Couldn't get cookie/sessionid authentication to work, as the browser won't accept the cookie.
+    #'corsheaders' ## See https://pypi.org/project/django-cors-headers/
 ]
+
+### Below, possibly used for cookie/sessionid authentication
+#SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+#SESSION_COOKIE_NAME = "user_session"
+#SESSION_COOKIE_HTTPONLY = True
+#SESSION_SAVE_EVERY_REQUEST = True
+#SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+#CORS_ORIGIN_WHITELIST = [ "http://127.0.0.1:8000" ]
+#CORS_ORIGIN_ALLOW_ALL = True
+#CORS_ALLOW_CREDENTIALS = True
+#CORS_ALLOW_METHODS = ["GET","POST"]
+#CORS_ALLOW_HEADERS = [ "accept", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "x-csrftoken", "x-requested-with" ]
+
+#CSRF_COOKIE_SECURE = True
+#CSRF_COOKIE_HTTPONLY = True
+
+### Below, possibly used for cookie/sessionid authentication
+#REST_FRAMEWORK = {
+#    'DEFAULT_AUTHENTICATION_CLASSES': [
+#        'rest_framework.authentication.SessionAuthentication',
+#    ],
+#    'DEFAULT_PERMISSION_CLASSES': [
+#        'rest_framework.permissions.IsAuthenticated',
+#    ],
+#}
 
 ## Check ${APP_NAME}/apps.py for the exact class name to be used above
 

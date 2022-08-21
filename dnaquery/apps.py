@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 
-
-class LeadsConfig(AppConfig):
+class DnaqueryConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'leads'
+    name = 'dnaquery'

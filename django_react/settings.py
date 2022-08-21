@@ -37,12 +37,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'leads.apps.LeadsConfig',
+    'dnaquery.apps.DnaqueryConfig',
     'rest_framework', ## And here!
     'frontend', ## Comments can go here!
     #'rest_framework.authtoken', ## Couldn't get cookie/sessionid authentication to work, as the browser won't accept the cookie.
     #'corsheaders' ## See https://pypi.org/project/django-cors-headers/
 ]
+
+DEBUG = False
+ALLOWED_HOSTS = ['*']
+
+REST_FRAMEWORK = {
+'DEFAULT_RENDERER_CLASSES': (
+'rest_framework.renderers.JSONRenderer',
+)
+}
 
 ### Below, possibly used for cookie/sessionid authentication
 #SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"

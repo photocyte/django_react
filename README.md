@@ -1,11 +1,9 @@
-Heavily based off https://www.valentinog.com/blog/drf/
-
-Seems to use its own sqlite3 database, which is convinient.
-admin, auth, contenttypes, leads, session (leads is based off the tutorial I was following)
-
-This seems an especially critical point, that I should probably read more about:
-"Django is a MVT framework. That is, Model – View – Template."
+See `one_command.sh` for the "Running all required processes for local development should be automated; one command." requirement.
 
 Notes:
-I am not including "secure" i.e. TLS for transport, as it is not an explicit requirement
-I am not including tests, as it is not an explicit requirement
+I am not including transport security features i.e. HTTPS/TLS, as it is not an explicit requirement. But if desired, could self sign for Django, or use Let's Encrypt to get signed certificates.
+
+I did try to include authentication of the endpoint, namely following this tutorial:
+https://www.guguweb.com/2022/01/23/django-rest-framework-authentication-the-easy-way/ . Although I could get the Django backend to properly authenticate & provide a session_id cookie, for some reason, the browsers were not accepting it. It seemingly has something to do with browser security policies, maybe having to do with the fact that I was doing local development. So, left to be done another day.
+
+I did not including tests.

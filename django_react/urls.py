@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include('leads.urls')), 
+    path('', include('dnaquery.urls')), 
     path('', include('frontend.urls')),
-    path('admin/', admin.site.urls), ## This seems suspicious, should probably comment it out
 ]
+
+##     path('admin/', admin.site.urls), ## This seems suspicious, should probably comment it out for production

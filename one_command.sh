@@ -13,7 +13,7 @@ source venv/bin/activate
 cd frontend; npm run dev; cd ..
 rm -rf leads/migrations/
 rm -f db.sqlite3
-python manage.py makemigrations leads
+python manage.py makemigrations dnaquery
 python manage.py migrate
 ##python manage.py createsuperuser
-python manage.py runserver
+python manage.py runserver --insecure

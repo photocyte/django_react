@@ -76,9 +76,11 @@ class QueryListCreate(generics.ListCreateAPIView):
             #print(search_process.returncode)
             #print(outs,type(outs))
             if outs != None:
-                merged_outs += outs
+                merged_outs += outs.strip()
         #print(merged_outs)
         merged_outs = merged_outs.decode('utf-8')
+        if len(merged_outs) == 0:
+            merged_outs = '(no hits)'
         model_rows.filter(id=max_index).update(alignment_status="COMPLETE")
         model_rows.filter(id=max_index).update(results=merged_outs)
         ### Below is a direct search using biopython. It's too slow. I'll just call blastx or diamond instead.

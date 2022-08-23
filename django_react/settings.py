@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,13 +25,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-cyhy+mydba1=sat^%24pr*4x@__$-1&2lvq*i$j+t#os)%t0p_'
+SECRET_KEY = str(os.getenv('SECRET_KEY')) ## Stored in a .env file that isn't git tracked
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = [str(os.getenv('HOSTNAME'))] ## Stored in a .env file that isn't git tracked
 
 # Application definition
 
@@ -43,9 +48,6 @@ INSTALLED_APPS = [
     #'rest_framework.authtoken', ## Couldn't get cookie/sessionid authentication to work, as the browser won't accept the cookie.
     #'corsheaders' ## See https://pypi.org/project/django-cors-headers/
 ]
-
-DEBUG = False
-ALLOWED_HOSTS = ['*']
 
 REST_FRAMEWORK = {
 'DEFAULT_RENDERER_CLASSES': (
@@ -66,7 +68,8 @@ REST_FRAMEWORK = {
 #CORS_ALLOW_METHODS = ["GET","POST"]
 #CORS_ALLOW_HEADERS = [ "accept", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "x-csrftoken", "x-requested-with" ]
 
-#CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 #CSRF_COOKIE_HTTPONLY = True
 
 ### Below, possibly used for cookie/sessionid authentication
@@ -165,7 +168,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

@@ -21,6 +21,6 @@ If looking to run this on your local machine, your mileage may vary. It was test
 - Diamond for DNA-to-protein alignment
 - Singularity/Apptainer for container-based execution of Diamond
 
-**Known issues"**
+**Known issues**
 
 None, it's the perfect app right? ;) But I'd be curious to hear your feedback on the code quality, and how it overlaps with the remaining issues that I hadn't figured out yet. I did skip implementing DoS protection in the app cause I trust you guys ;) 

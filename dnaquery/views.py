@@ -65,7 +65,7 @@ class QueryListCreate(generics.ListCreateAPIView):
 
         merged_outs = b''
         for k,v in preloaded_fastas.items():
-            diamond_cmd='/Users/tim/Source/git/diamond/bin/diamond blastx --query-gencode {gc} --db {db}'.format(gc=k,db=v) ##diamond will read the query in FASTA format from stdin.
+            diamond_cmd='apptainer exec ./diamond_2.0.15--hb97b32f_1.sif diamond blastx --query-gencode {gc} --db {db}'.format(gc=k,db=v) ##diamond will read the query in FASTA format from stdin.
             cmd_list = shlex.split(diamond_cmd)
             print(cmd_list)
             search_process = subprocess.Popen(cmd_list,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)

@@ -22,6 +22,8 @@ source venv/bin/activate
 # Add presets to .babelrc
 # add rules to webpack.config.js
 
+## apptainer pull docker://quay.io/biocontainers/diamond:2.0.15--hb97b32f_1
+
 cd frontend; npm run dev; cd ..
 rm -rf leads/migrations/
 rm -f db.sqlite3
@@ -29,7 +31,7 @@ rm -f db.sqlite3
 python manage.py makemigrations dnaquery
 python manage.py migrate
 ##python manage.py createsuperuser ## Doesn't seem necesarry
-python manage.py runserver --insecure ## --insecure required to shut off Debug mode & not run it on real host
+python manage.py runserver --insecure 0.0.0.0:52371 ## --insecure required to shut off Debug mode & not run it on real host
 
 ### Deploy to production
 #python3 manage.py check --deploy

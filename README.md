@@ -17,7 +17,7 @@ If looking to run this on your local machine, your mileage may vary. It was test
 - React frontend (1 form, 1 table)
 - Sqlite database 
 - Gunicorn for wsgi interfacing
-- nginx for reverse proxy, serving of static files, https, rate limiting
+- nginx for reverse proxy, serving of static files, https, <s>rate limiting</s>
 - Diamond for DNA-to-protein alignment
 - Singularity/Apptainer for container-based execution of Diamond
 

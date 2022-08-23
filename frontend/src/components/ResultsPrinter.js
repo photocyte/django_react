@@ -103,7 +103,7 @@ class ResultsPrinter extends Component {
             //This section is written in JSX - React's HTML-like DSL: https://reactjs.org/docs/introducing-jsx.html
 
             <tr key={row.id}>
-              <td style={colStyle1}>Input seq with length: {row.query_seq.length}</td><td style={colStyle1}>{row.alignment_status}</td><td style={colStyle2}>{row.results}</td>
+              <td style={colStyle1}>Input seq with length: {row.query_seq.length}, starts with {row.query_seq.slice(0,10)}</td><td style={colStyle1}>{row.alignment_status}</td><td style={colStyle2}>{row.results}</td>
             </tr>
           );
         })}

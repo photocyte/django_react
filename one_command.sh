@@ -42,6 +42,8 @@ fi
 
 if [[ "$MODE" == "prod" ]];
 then
+pgrep gunicorn | xargs kill
+
 python manage.py collectstatic ## only necesarry when trying to run production
 
 ### Deploy to production...

@@ -18,5 +18,6 @@ ls -1 ./NC*.faa | grep 'NC_023719' | xargs cat > merged_gc11.faa ##This genome h
 
 for f in ./merged*.faa
 do
-/Users/tim/Source/git/diamond/bin/diamond makedb --in ${f} -d ${f}
+apptainer exec ../diamond_2.0.15--hb97b32f_1.sif diamond makedb --in ${f} -d ${f}
+apptainer exec ../blast_2.13.0--hf3cf87c_0.sif makeblastdb -in ${f} -input_type fasta -dbtype prot
 done

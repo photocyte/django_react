@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { createRoot } from 'react-dom/client';
+import parse from 'html-react-parser';
+
 //const crypto = import('node:crypto');
 
 // See https://blog.bitsrc.io/polling-in-react-using-the-useinterval-custom-hook-e2bcefda4197
@@ -88,7 +90,7 @@ class ResultsPrinter extends Component {
       "borderCollapse": "collapse"
     };
     var colStyle2 = {
-      "width": "650px",
+      "width": "1500px",
       "border": "1px solid black",
       "borderCollapse": "collapse"
     };
@@ -103,7 +105,7 @@ class ResultsPrinter extends Component {
             //This section is written in JSX - React's HTML-like DSL: https://reactjs.org/docs/introducing-jsx.html
 
             <tr key={row.id}>
-              <td style={colStyle1}>Input seq with length: {row.query_seq.length}, starts with {row.query_seq.slice(0,10)}</td><td style={colStyle1}>{row.alignment_status}</td><td style={colStyle2}>{row.results}</td>
+              <td style={colStyle1}>Input seq with length: {row.query_seq.length}, starts with {row.query_seq.slice(0,10)}</td><td style={colStyle1}>{row.alignment_status}</td><td style={colStyle2}><ul>{parse(row.results.split(/\r?\n/).map(function (e) {return "<li>"+e+"</li>";}).join(''))}</ul></td>
             </tr>
           );
         })}

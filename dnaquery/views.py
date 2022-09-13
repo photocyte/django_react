@@ -65,8 +65,9 @@ class QueryListCreate(generics.ListCreateAPIView):
 
         merged_outs = b''
         for k,v in preloaded_fastas.items():
-            diamond_cmd='apptainer exec ./diamond_2.0.15--hb97b32f_1.sif diamond blastx --ultra-sensitive --evalue 9999999 --query-gencode {gc} --db {db}'.format(gc=k,db=v) ##diamond will read the query in FASTA format from stdin.
-            cmd_list = shlex.split(diamond_cmd)
+            #diamond_cmd='apptainer exec ./diamond_2.0.15--hb97b32f_1.sif diamond blastx --ultra-sensitive --evalue 9999999 --query-gencode {gc} --db {db}'.format(gc=k,db=v) ##diamond will read the query in FASTA format from stdin.
+            blastx_cmd='apptainer exec ./blast_2.13.0--hf3cf87c_0.sif blastx -query_gencode {gc} -word_size 2 -outfmt 6 -evalue 999999999999 -num_alignments 1 -query /dev/stdin -subject {db}'.format(gc=k,db=v)
+            cmd_list = shlex.split(blastx_cmd)
             print(cmd_list)
             search_process = subprocess.Popen(cmd_list,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
             query = '>{hash}\n{seq}'.format(hash='QuerySeqID',seq=dna_seq).encode('utf-8') ##hash(dna_seq)
@@ -76,8 +77,9 @@ class QueryListCreate(generics.ListCreateAPIView):
             #print(search_process.returncode)
             #print(outs,type(outs))
             if outs != None:
-                merged_outs += outs.strip()
-        #print(merged_outs)
+                merged_outs += outs
+        merged_outs = merged_outs.strip()
+        print(merged_outs)
         merged_outs = merged_outs.decode('utf-8')
         if len(merged_outs) == 0:
             merged_outs = '(no hits)'

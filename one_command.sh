@@ -5,6 +5,9 @@ MODE="prod" ## or "dev"
 ### Apptainer container pulling
 apptainer pull docker://quay.io/biocontainers/blast:2.13.0--hf3cf87c_0
 
+#
+#npm install html-react-parser --save
+
 ### Setup virtual environment.
 # sudo apt install -y python3 python3-venv python3-dev python3-wheel gcc python3-pip
 # python3 -m venv venv

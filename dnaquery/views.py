@@ -23,13 +23,15 @@ import re
 import shlex
 from io import StringIO 
 
-## Just has to run these early somewhere & then be use them as global variables. Seems a decent place!
+## Just have to run these early somewhere, & then use them as global variables. Seems a decent place!
 #fasta_to_transl_table_dict = {'NC_000852.faa':1,'NC_007346.faa':1,'NC_008724.faa':1,'NC_009899.faa':1,'NC_014637.faa':1,'NC_016072.faa':1,'NC_020104.faa':1,'NC_023423.faa':1,'NC_023719.faa':1,'NC_027867.faa':1}
 #fasta_to_transl_table_dict = {'./challenge_proteomes/' + str(key): val for key, val in fasta_to_transl_table_dict.items()} ## Add a prefix for where they are path-wise
 #preloaded_fastas = { k:Bio.SeqIO.parse(k,"fasta") for k in fasta_to_transl_table_dict.keys() }
-preloaded_fastas = { re.findall('.+gc([0-9]+).+',f)[0]:f for f in glob.glob('./challenge_proteomes/merged*.faa') } ## <-- the preprocess.sh script merges the files based on genetic code
 
-#BLOSUM62_matrix = Bio.Align.substitution_matrices.load('BLOSUM62')
+preloaded_fasta_paths = { re.findall('.+gc([0-9]+).+',f)[0]:f for f in glob.glob('./challenge_proteomes/merged*.faa') } ## <-- the preprocess.sh script merges the files based on genetic code
+preloaded_fastas = { k:list(Bio.SeqIO.parse(v,"fasta")) for k,v in preloaded_fasta_paths.items() }
+
+BLOSUM62_matrix = Bio.Align.substitution_matrices.load('BLOSUM62')
 
 ##I tried to override, or decorate the Bio.SeqUtils.six_frame_translations , since I want the actual sequence not its default pretty print thing
 ## https://levelup.gitconnected.com/method-and-function-overriding-in-python-96a000274248
@@ -47,6 +49,7 @@ def six_frame_translate(seq,genetic_code):
         fragment_length = 3 * ((length - i) // 3)
         frames[i + 1] = translate(seq[i : i + fragment_length], genetic_code)
         frames[-(i + 1)] = translate(anti[i : i + fragment_length], genetic_code)[::-1]
+    frames = {key:val for key, val in frames.items() if val != ''} ##Remove invalid frames, i.e. the +3 -3 with ACTG or other 4 base options
     return frames
 
 ## https://www.django-rest-framework.org/api-guide/generic-views/#listcreateapiview
@@ -64,18 +67,31 @@ class QueryListCreate(generics.ListCreateAPIView):
         model_rows.filter(id=max_index).update(alignment_status="RUNNING")
 
         merged_outs = b''
+        six_frame_precalc = {}
+        for gc in preloaded_fasta_paths.keys():
+            six_frame_precalc[gc] = six_frame_translate(dna_seq,gc)
+
+        ##Have to iterate over the multiple genetic codes that exist
+        ##k = genetic code, v = fasta seq data
         for k,v in preloaded_fastas.items():
             #diamond_cmd='apptainer exec ./diamond_2.0.15--hb97b32f_1.sif diamond blastx --ultra-sensitive --evalue 9999999 --query-gencode {gc} --db {db}'.format(gc=k,db=v) ##diamond will read the query in FASTA format from stdin.
-            blastx_cmd='apptainer exec ./blast_2.13.0--hf3cf87c_0.sif blastx -query_gencode {gc} -word_size 2 -outfmt 6 -evalue 999999999999 -num_alignments 1 -query /dev/stdin -subject {db}'.format(gc=k,db=v)
-            cmd_list = shlex.split(blastx_cmd)
-            print(cmd_list)
-            search_process = subprocess.Popen(cmd_list,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-            query = '>{hash}\n{seq}'.format(hash='QuerySeqID',seq=dna_seq).encode('utf-8') ##hash(dna_seq)
-            search_process.communicate(input=query)
-            outs, errs = search_process.communicate()
+            #blastx_cmd='apptainer exec ./blast_2.13.0--hf3cf87c_0.sif blastx -query_gencode {gc} -word_size 2 -outfmt 6 -evalue 999999999999 -num_alignments 1 -query /dev/stdin -subject {db}'.format(gc=k,db=v)
+            #cmd_list = shlex.split(blastx_cmd)
+            #print(cmd_list)
+
+            ## j = genetic code , c = the 6 frame translation
+            for j,c in six_frame_precalc.items():
+                print(j,c)
+                ##TODO_CONTINUE: complete alignment process here
+
+            #search_process = subprocess.Popen(cmd_list,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            #query = '>{hash}\n{seq}'.format(hash='QuerySeqID',seq=dna_seq).encode('utf-8') ##hash(dna_seq)
+            #search_process.communicate(input=query)
+            #outs, errs = search_process.communicate()
             #print(outs,errs)
             #print(search_process.returncode)
             #print(outs,type(outs))
+            outs = None ## Bandaid
             if outs != None:
                 merged_outs += outs
         merged_outs = merged_outs.strip()
@@ -85,6 +101,7 @@ class QueryListCreate(generics.ListCreateAPIView):
             merged_outs = '(no hits)'
         model_rows.filter(id=max_index).update(alignment_status="COMPLETE")
         model_rows.filter(id=max_index).update(results=merged_outs)
+
         ### Below is a direct search using biopython. It's too slow. I'll just call blastx or diamond instead.
         ##
         ##v in this case is the different genetic codes / trans_table:
